@@ -860,6 +860,11 @@ rt{font-size:0.55em;font-weight:400;color:#8a7a84;line-height:1.2;user-select:no
     width:34px;
     max-height:calc(100vh - 140px);
   }
+  /* Khi đề có thanh audio (nghe), đẩy panel BÀI LÀM xuống thêm để không bị đè */
+  .jlpt-exam-screen.has-audio-bar .jlpt-answer-sheet{
+    top:104px;
+    max-height:calc(100vh - 188px);
+  }
 }
 
 .jlpt-answer-title{font-size:8px;font-weight:700;color:#ffffff;text-align:center;padding:2px 0 4px;letter-spacing:.5px;background:#e3a7c1;border-radius:6px;}
@@ -5544,7 +5549,7 @@ async function teViewAttempt(attemptId) {
   const reviewDate = new Date(attempt.submitted_at).toLocaleString('vi');
 
   wrap.innerHTML = `
-    <div class="jlpt-exam-screen">
+    <div class="jlpt-exam-screen${exam.skill==='listening'?' has-audio-bar':''}">
       <div class="jlpt-exam-topbar">
         <button onclick="teGoToList()" style="border:none;background:none;cursor:pointer;color:#8a7a84;font-size:12px;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;flex-shrink:0">
           <i class="ti ti-arrow-left"></i> Lịch sử thi
@@ -6266,7 +6271,7 @@ async function loadJlptExamRunner(examId) {
   const isListen = exam.skill === 'listening';
 
   wrap.innerHTML = `
-    <div class="jlpt-exam-screen">
+    <div class="jlpt-exam-screen${isListen?' has-audio-bar':''}">
       <div class="jlpt-exam-topbar">
         <button onclick="teConfirmLeave()" style="border:none;background:none;cursor:pointer;color:#8a7a84;font-size:12px;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;flex-shrink:0">
           <i class="ti ti-arrow-left"></i> Đề thi
