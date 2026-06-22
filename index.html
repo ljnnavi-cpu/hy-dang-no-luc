@@ -236,14 +236,17 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .post-stat-chip.liked{color:#e05880;border-color:#f5b0c8;background:#fff0f5}
 .post-stat-chip.pinned-chip{color:var(--pk4);border-color:var(--pk3);background:var(--pk)}
 .post-detail-title{font-size:26px;font-weight:800;line-height:1.3;margin-bottom:16px;color:var(--txt)}
-.post-detail-content{font-size:15px;line-height:1.9;color:var(--txt)}
+.post-detail-content{font-size:15px;line-height:1.9;color:var(--txt);overflow-x:hidden;word-break:break-word;overflow-wrap:break-word}
 .post-detail-content p{margin-bottom:14px}
 .post-detail-content strong{font-weight:700}
 .post-detail-content em{font-style:italic}
 .post-detail-content u{text-decoration:underline}
 .post-detail-content ul,.post-detail-content ol{padding-left:24px;margin-bottom:14px}
-.post-detail-content img{max-width:100%;border-radius:12px;margin:10px 0}
+.post-detail-content img{max-width:100%!important;width:auto!important;height:auto!important;border-radius:12px;margin:10px 0;display:block}
 .post-detail-content a{color:var(--pk4);text-decoration:underline}
+.post-detail-content table{display:block;width:100%!important;max-width:100%;overflow-x:auto;border-collapse:collapse;-webkit-overflow-scrolling:touch}
+.post-detail-content table td,.post-detail-content table th{border:1.5px solid var(--brd);padding:8px 12px;min-width:60px;vertical-align:top;word-break:break-word}
+.post-detail-content iframe,.post-detail-content video{max-width:100%!important;height:auto}
 .post-divider{border:none;border-top:1.5px solid var(--brd);margin:28px 0}
 .comment-section-title{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .comment-list-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
@@ -671,8 +674,19 @@ rt{font-size:0.55em;font-weight:400;color:#8a7a84;line-height:1.2;user-select:no
   font-weight:800;
 }
 /* Audio bar */
-.jlpt-audio-status{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:#fff;padding:8px 20px;display:none;align-items:center;gap:10px;font-size:12px;flex-shrink:0}
+.jlpt-audio-status{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:#fff;padding:8px 16px;display:none;align-items:center;gap:10px;font-size:13px;flex-shrink:0;box-sizing:border-box;position:fixed;top:57px;left:220px;right:0;z-index:49}
 .jlpt-audio-status.active{display:flex}
+/* Đẩy nội dung xuống khi thanh audio hiện */
+.jlpt-exam-screen.has-audio-bar .jlpt-exam-layout,
+.jlpt-exam-screen.has-audio-bar #te-result{margin-top:45px}
+/* Mobile: sidebar ẩn -> left:0 */
+@media(max-width:640px){
+  .jlpt-audio-status{top:56px;left:0}
+  .jlpt-exam-screen.has-audio-bar{padding-top:calc(58px + 45px)!important}
+}
+.jlpt-audio-status #te-audio-text{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jlpt-audio-status #te-audio-time{white-space:nowrap;font-size:12px;opacity:.7}
+#te-audio-pause-btn{flex-shrink:0;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:#fff;border-radius:6px;padding:4px 14px;font-size:13px;cursor:pointer;white-space:nowrap;transition:background .15s}
 .jlpt-audio-dot{width:8px;height:8px;border-radius:50%;background:#52ff88;animation:jlptBlink 1s infinite;flex-shrink:0}
 @keyframes jlptBlink{0%,100%{opacity:1}50%{opacity:.3}}
 .jlpt-audio-wave{display:flex;gap:2px;align-items:center;flex-shrink:0}
@@ -688,7 +702,7 @@ rt{font-size:0.55em;font-weight:400;color:#8a7a84;line-height:1.2;user-select:no
 /* Exam layout */
 .jlpt-exam-layout{display:grid;grid-template-columns:1fr 44px;gap:0;max-width:1280px;margin:0 auto;padding:20px 60px 16px 40px;align-items:start}
 @media(max-width:640px){
-  .jlpt-exam-layout{padding-right:44px !important}
+  .jlpt-exam-layout{padding-right:54px !important}
 }
 .jlpt-exam-body{min-width:0}
 /* Question groups */
@@ -845,30 +859,35 @@ rt{font-size:0.55em;font-weight:400;color:#8a7a84;line-height:1.2;user-select:no
 .jlpt-answer-sheet{
   position:fixed;
   top:80px;
-  right:24px;
-  width:50px;
+  right:20px;
+  width:52px;
   max-height:calc(100vh - 100px);
   overflow-y:auto;
   overflow-x:visible;
   z-index:90;
 }
+/* Desktop: khi bài nghe có audio bar, đẩy xuống thêm 45px */
+.jlpt-exam-screen.has-audio-bar .jlpt-answer-sheet{
+  top:125px;
+  max-height:calc(100vh - 145px);
+}
 @media(max-width:640px){
   .jlpt-answer-sheet{
-    top:56px;
+    top:66px;
     bottom:80px;
     right:4px;
-    width:34px;
-    max-height:calc(100vh - 140px);
+    width:46px;
+    max-height:calc(100vh - 150px);
   }
-  /* Khi đề có thanh audio (nghe), đẩy panel BÀI LÀM xuống thêm để không bị đè */
+  /* Mobile: khi bài nghe có thanh audio */
   .jlpt-exam-screen.has-audio-bar .jlpt-answer-sheet{
-    top:104px;
-    max-height:calc(100vh - 188px);
+    top:116px;
+    max-height:calc(100vh - 200px);
   }
 }
 
-.jlpt-answer-title{font-size:8px;font-weight:700;color:#ffffff;text-align:center;padding:2px 0 4px;letter-spacing:.5px;background:#e3a7c1;border-radius:6px;}
-.jlpt-answer-dot{width:36px;height:28px;border-radius:6px;border:1.5px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;color:#b0a0a8;background:#fff;flex-shrink:0;}
+.jlpt-answer-title{font-size:8px;font-weight:700;color:#ffffff;text-align:center;padding:3px 2px 4px;letter-spacing:.5px;background:#e3a7c1;border-radius:6px;word-break:keep-all;white-space:normal;line-height:1.3}
+.jlpt-answer-dot{width:46px;height:30px;border-radius:6px;border:1.5px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;color:#b0a0a8;background:#fff;flex-shrink:0;}
 .jlpt-answer-dot:hover{border-color:var(--pk3);background:var(--pk2);color:var(--pk4)}
 .jlpt-answer-dot.answered{background:var(--pk4);border-color:var(--pk4);color:#fff}
 .jlpt-answer-dot.no{background:#fde8e8;border-color:#f5a0a0;color:#c05050}
@@ -5570,6 +5589,12 @@ async function teViewAttempt(attemptId) {
         <div class="jlpt-audio-dot" style="background:#3b6fd4"></div>
         <span id="te-audio-text" style="color:#3b6fd4;font-weight:600">🎧 Xem lại — Bấm ▶ ở từng câu để nghe lại</span>
         <span style="margin-left:auto;font-size:11px;opacity:.6" id="te-audio-time"></span>
+        <button id="te-audio-pause-btn" onclick="teToggleAudioPause()"
+          style="flex-shrink:0;background:#dce8fc;border:1px solid #b8cef0;
+                 color:#3060d0;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;
+                 display:flex;align-items:center;gap:5px;transition:background .15s">
+          ⏹ Dừng
+        </button>
       </div>
       <audio id="te-audio-el" style="display:none" aria-hidden="true"></audio>
       ` : ''}
@@ -5578,7 +5603,7 @@ async function teViewAttempt(attemptId) {
         <div class="jlpt-exam-body" id="te-body">${questionsHtml}</div>
         <div class="jlpt-answer-sheet-wrap">
           <div class="jlpt-answer-sheet" id="te-answer-sheet">
-            <div class="jlpt-answer-title">BÀI LÀM</div>
+            <div class="jlpt-answer-title">BÀI<br>LÀM</div>
             ${dotsHtml}
           </div>
         </div>
@@ -6289,6 +6314,12 @@ async function loadJlptExamRunner(examId) {
         <div class="jlpt-audio-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
         <span id="te-audio-text">Đang phát audio bài nghe...</span>
         <span style="margin-left:auto;font-size:11px;opacity:.6" id="te-audio-time">0:00 / 0:00</span>
+        <button id="te-audio-pause-btn" onclick="teToggleAudioPause()"
+          style="flex-shrink:0;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);
+                 color:#fff;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;
+                 display:flex;align-items:center;gap:5px;transition:background .15s">
+          ⏸ Dừng
+        </button>
       </div>
       <audio id="te-audio-el" style="display:none" aria-hidden="true"></audio>
 
@@ -6296,7 +6327,7 @@ async function loadJlptExamRunner(examId) {
         <div class="jlpt-exam-body" id="te-body">${questionsHtml}</div>
         <div class="jlpt-answer-sheet-wrap">
           <div class="jlpt-answer-sheet" id="te-answer-sheet">
-            <div class="jlpt-answer-title">BÀI LÀM</div>
+            <div class="jlpt-answer-title">BÀI<br>LÀM</div>
             ${dotsHtml}
           </div>
         </div>
@@ -6786,6 +6817,7 @@ const tePlaylist = {
   audio: null,
   started: false,
   finished: false,
+  userPaused: false,
   onAllEnded: null,
   countdownInterval: null,
 };
@@ -6799,6 +6831,7 @@ function startListeningPlaylist(audioFiles, onAllEnded) {
   tePlaylist.index      = -1;
   tePlaylist.started    = true;
   tePlaylist.finished   = false;
+  tePlaylist.userPaused = false;
   tePlaylist.onAllEnded = onAllEnded || null;
 
   playNextJlptAudio();
@@ -6839,7 +6872,12 @@ function playJlptAudioAt(index) {
   });
 
   // Auto-advance when done
-  audio.onended = () => playNextJlptAudio();
+  audio.onended = () => {
+    // Reset pause button label in case user had paused before this track ended
+    const btn = document.getElementById('te-audio-pause-btn');
+    if (btn && !tePlaylist.userPaused) btn.innerHTML = '⏸ Dừng';
+    playNextJlptAudio();
+  };
 
   // Skip broken files gracefully
   audio.onerror = () => {
@@ -6857,7 +6895,35 @@ function playJlptAudioAt(index) {
 
 // ── Advance to next ───────────────────────────────────────────
 function playNextJlptAudio() {
+  if (tePlaylist.userPaused) return; // don't auto-advance while paused
   playJlptAudioAt(tePlaylist.index + 1);
+}
+
+// ── Pause / Resume playlist ───────────────────────────────────
+function teToggleAudioPause() {
+  const btn = document.getElementById('te-audio-pause-btn');
+  const bar = document.getElementById('te-audio-bar');
+
+  // Use the globally exposed segPlayer (real live-exam engine)
+  const sp = window._segPlayer || null;
+  const liveAudio = sp ? sp.audio : (tePlaylist.audio || null);
+  const isPaused = sp ? sp.userPaused : tePlaylist.userPaused;
+
+  if (!isPaused) {
+    // ── PAUSE ──
+    if (sp) sp.userPaused = true; else tePlaylist.userPaused = true;
+    if (liveAudio) liveAudio.pause();
+    if (bar) { bar.classList.remove('active'); bar.classList.add('ended'); }
+    if (btn) { btn.innerHTML = '▶ Tiếp tục'; btn.style.background = 'rgba(255,255,255,0.32)'; }
+  } else {
+    // ── RESUME ──
+    if (sp) sp.userPaused = false; else tePlaylist.userPaused = false;
+    if (liveAudio && liveAudio.paused) {
+      liveAudio.play().catch(() => {});
+    }
+    if (bar) { bar.classList.add('active'); bar.classList.remove('ended'); }
+    if (btn) { btn.innerHTML = '⏸ Dừng'; btn.style.background = 'rgba(255,255,255,0.18)'; }
+  }
 }
 
 // ── Stop everything ───────────────────────────────────────────
@@ -6873,9 +6939,10 @@ function stopListeningPlaylist() {
     clearInterval(tePlaylist.countdownInterval);
     tePlaylist.countdownInterval = null;
   }
-  tePlaylist.started  = false;
-  tePlaylist.finished = true;
-  tePlaylist.index    = -1;
+  tePlaylist.started    = false;
+  tePlaylist.finished   = true;
+  tePlaylist.userPaused = false;
+  tePlaylist.index      = -1;
 }
 
 // ── Update the audio status bar during playback ───────────────
@@ -6981,9 +7048,11 @@ function _teOnAllAudioEnded() {
   const bar    = document.getElementById('te-audio-bar');
   const textEl = document.getElementById('te-audio-text');
   const timeEl = document.getElementById('te-audio-time');
+  const btn    = document.getElementById('te-audio-pause-btn');
 
   if (bar) bar.classList.add('ended');
   if (timeEl) timeEl.textContent = '';
+  if (btn) { btn.innerHTML = '⏹ Dừng'; btn.disabled = true; btn.style.opacity = '0.45'; }
 
   let cd = 60;
   const msg = () => `✅ Audio kết thúc — còn ${cd}s để hoàn tất bài làm`;
@@ -9467,8 +9536,10 @@ function exitVlFullpage() {
     timer: null,
     countdown: null,
     onAllEnded: null,
-    stopped: true
+    stopped: true,
+    userPaused: false
   };
+  window._segPlayer = segPlayer; // expose globally for teToggleAudioPause
 
   function stopSegmentPlaylist(){
     if (segPlayer.audio) {
@@ -9482,6 +9553,7 @@ function exitVlFullpage() {
     segPlayer.timer = null;
     segPlayer.countdown = null;
     segPlayer.stopped = true;
+    segPlayer.userPaused = false;
     segPlayer.index = -1;
   }
 
@@ -9517,49 +9589,48 @@ function exitVlFullpage() {
     segPlayer.index = index;
     const file = files[index];
     const url = teGetUrl(file, segPlayer.exam);
-    const seg = teGetSegment(file) || { start: 0, end: 0, duration: 0 };
     const audio = new Audio(url);
     audio.preload = 'auto';
     audio.controls = false;
     segPlayer.audio = audio;
 
+    const label = file.label || (file.question_range
+      ? `Câu ${file.question_range[0]}${file.question_range[1] !== file.question_range[0] ? '–' + file.question_range[1] : ''}`
+      : String(file.no || index + 1));
+
+    // Update bar display (fulltime — no timestamp offset)
+    const updateBar = () => {
+      const bar = document.getElementById('te-audio-bar');
+      const textEl = document.getElementById('te-audio-text');
+      const timeEl = document.getElementById('te-audio-time');
+      if (bar) { bar.classList.add('active'); bar.classList.remove('ended'); }
+      if (textEl) textEl.textContent = `🎧 Đang phát: ${label}`;
+      if (timeEl) {
+        const cur = audio.currentTime || 0;
+        const dur = audio.duration || 0;
+        timeEl.textContent = `${teFmtTime(cur)} / ${teFmtTime(dur)} · Đoạn ${index + 1}/${files.length}`;
+      }
+    };
+
     const goNext = () => {
-      if (segPlayer.stopped) return;
+      if (segPlayer.stopped || segPlayer.userPaused) return;
       audio.pause();
       clearInterval(segPlayer.timer);
       setTimeout(() => playSegmentAt(index + 1), 350);
     };
 
-    audio.addEventListener('loadedmetadata', () => {
-      try { audio.currentTime = seg.start || 0; } catch(e) {}
-    }, { once: true });
-
-    audio.addEventListener('timeupdate', () => {
-      updateSegmentBar(file, seg, audio, index, files.length);
-      if (seg.end && audio.currentTime >= seg.end - 0.05) goNext();
-    });
-
+    audio.addEventListener('timeupdate', updateBar);
     audio.onended = goNext;
     audio.onerror = () => {
       console.warn('[JLPT segment audio] Không phát được:', url, file);
       goNext();
     };
 
-    // Safety timer phòng trường hợp timeupdate không chạy đều
-    segPlayer.timer = setInterval(() => {
-      if (!segPlayer.audio || segPlayer.stopped) return;
-      updateSegmentBar(file, seg, audio, index, files.length);
-      if (seg.end && audio.currentTime >= seg.end - 0.05) goNext();
-    }, 250);
+    segPlayer.timer = setInterval(updateBar, 250);
 
-    audio.play().then(() => {
-      // Một số trình duyệt set currentTime sau play ổn hơn
-      if (seg.start && Math.abs(audio.currentTime - seg.start) > 1) {
-        try { audio.currentTime = seg.start; } catch(e) {}
-      }
-    }).catch(err => {
+    audio.play().catch(err => {
       console.warn('[JLPT segment audio] autoplay blocked:', err);
-      showToast?.('⚠️ Trình duyệt chặn tự phát audio. Hãy bấm lại nút bắt đầu hoặc cho phép phát tự động.');
+      showToast?.('⚠️ Trình duyệt chặn tự phát audio. Hãy cho phép phát tự động.');
     });
   }
 
@@ -9616,27 +9687,74 @@ function exitVlFullpage() {
   // ============================================================
   window.tePlayReviewSegment = function(url, start, end, label){
     if (!url) return;
-    if (!window.__jlptReviewAudio) window.__jlptReviewAudio = new Audio();
+
+    // Track exactly which segment is loaded: url + start + end
+    const segKey = url + '|' + start + '|' + end;
+
+    // Find the button for this specific segment
+    const allBtns = document.querySelectorAll('[onclick*="tePlayReviewSegment"]');
+    let clickedBtn = null;
+    allBtns.forEach(b => {
+      const onc = b.getAttribute('onclick') || '';
+      // Match by both url fragment AND the exact start/end numbers
+      if (onc.includes(url.slice(-30)) && onc.includes(String(start)) && onc.includes(String(end))) {
+        clickedBtn = b;
+      }
+    });
+
     const a = window.__jlptReviewAudio;
-    a.pause();
-    a.src = url;
-    a.preload = 'auto';
+    const isSameSeg = a && window.__jlptReviewSegKey === segKey;
+
+    // Same segment already playing → PAUSE
+    if (isSameSeg && !a.paused) {
+      a.pause();
+      if (clickedBtn) clickedBtn.innerHTML = `▶ Nghe đoạn ${teFmtTime(start)}–${teFmtTime(end)}`;
+      const info = document.getElementById('te-review-audio-status');
+      if (info) info.textContent = '⏸ Đã tạm dừng';
+      return;
+    }
+
+    // Same segment paused → RESUME from where it stopped
+    if (isSameSeg && a.paused && a.currentTime > 0) {
+      a.play().catch(() => showToast?.('⚠️ Không phát được audio.'));
+      if (clickedBtn) clickedBtn.innerHTML = `⏸ ${teFmtTime(start)}–${teFmtTime(end)}`;
+      const info = document.getElementById('te-review-audio-status');
+      if (info) info.textContent = `🎧 Đang nghe lại: ${label || ''}`;
+      return;
+    }
+
+    // Different segment — stop old audio completely, reset all buttons
+    if (a) { a.pause(); a.removeAttribute('src'); a.load?.(); }
+    window.__jlptReviewSegKey = segKey;
+
+    document.querySelectorAll('[onclick*="tePlayReviewSegment"]').forEach(b => {
+      const m = b.getAttribute('onclick')?.match(/(\d+\.?\d*),\s*(\d+\.?\d*)/);
+      if (m) b.innerHTML = `▶ Nghe đoạn ${teFmtTime(m[1])}–${teFmtTime(m[2])}`;
+    });
+
+    if (!window.__jlptReviewAudio) window.__jlptReviewAudio = new Audio();
+    const audio = window.__jlptReviewAudio;
+    audio.src = url;
+    audio.preload = 'auto';
 
     const info = document.getElementById('te-review-audio-status');
     if (info) info.textContent = `🎧 Đang nghe lại: ${label || ''}`;
+    if (clickedBtn) clickedBtn.innerHTML = `⏸ ${teFmtTime(start)}–${teFmtTime(end)}`;
 
     const stopAtEnd = () => {
-      if (Number(end) && a.currentTime >= Number(end) - 0.05) {
-        a.pause();
-        a.removeEventListener('timeupdate', stopAtEnd);
-        if (info) info.textContent = '✅ Đã phát xong đoạn nghe lại';
+      if (Number(end) && audio.currentTime >= Number(end) - 0.05) {
+        audio.pause();
+        audio.removeEventListener('timeupdate', stopAtEnd);
+        if (info) info.textContent = '✅ Đã phát xong';
+        if (clickedBtn) clickedBtn.innerHTML = `▶ Nghe đoạn ${teFmtTime(start)}–${teFmtTime(end)}`;
+        window.__jlptReviewSegKey = null;
       }
     };
-    a.addEventListener('loadedmetadata', () => {
-      try { a.currentTime = Number(start) || 0; } catch(e) {}
-      a.play().catch(() => showToast?.('⚠️ Không phát được audio nghe lại.'));
-    }, { once:true });
-    a.addEventListener('timeupdate', stopAtEnd);
+    audio.addEventListener('loadedmetadata', () => {
+      try { audio.currentTime = Number(start) || 0; } catch(e) {}
+      audio.play().catch(() => showToast?.('⚠️ Không phát được audio nghe lại.'));
+    }, { once: true });
+    audio.addEventListener('timeupdate', stopAtEnd);
   };
 
   window.renderReviewAudioForQuestion = function(q, audioFiles){
